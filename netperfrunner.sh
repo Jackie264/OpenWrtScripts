@@ -186,6 +186,13 @@ done
 
 # Start main test
 
+# Check to see if netperf is installed and exit if not
+if ! command -v netperf >/dev/null 2>&1; then
+  echo ""
+  echo "Error: netperf is not installed or not in PATH" >&2
+  exit 1
+fi
+
 if [ $TESTPROTO -eq "-4" ]
 then
 	PROTO="ipv4"

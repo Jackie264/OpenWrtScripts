@@ -160,7 +160,7 @@ measure_direction() {
   ERRFILE=$(mktemp /tmp/netperfErr.XXXXXX) || exit 1
   DIRECTION=$1
   
-  # start off the ping process
+# start off the ping process
   start_pings
 
   # Start netperf with the proper direction
@@ -169,7 +169,7 @@ measure_direction() {
   else
     dir="TCP_STREAM"
   fi
-  
+
   # Start $MAXSESSIONS datastreams between netperf client and the netperf server
   # netperf writes the sole output value (in Mbps) to stdout when completed
   for i in $( seq "$MAXSESSIONS" )
@@ -231,6 +231,13 @@ MAXSESSIONS="5"
 TESTPROTO="-4"
 IDLETEST=false
 
+# Check to see if netperf is installed and exit if not
+if ! command -v netperf >/dev/null 2>&1; then
+  echo ""
+  echo "Error: netperf is not installed or not in PATH" >&2
+  exit 1
+fi
+
 # read the options
 
 # extract options and their arguments into variables.
@@ -287,6 +294,7 @@ if $IDLETEST
 then
   echo "$DATE Testing idle line while pinging $PINGHOST ($TESTDUR seconds)"
   SPEEDFILE=$(mktemp /tmp/netperfUL.XXXXXX) || exit 1
+  ERRFILE=$(mktemp /tmp/netperfErr.XXXXXX) || exit 1
   start_pings
   sleep "$TESTDUR"
   summarize_pings "$PINGFILE"

@@ -22,8 +22,7 @@ These scripts work for [OpenWrt](https://openwrt.org) and include:
   that can be taped on the side of the router.
 
 * [betterspeedtest.sh](#betterspeedtestsh) &
-  [netperfrunner.sh](#netperfrunnersh) &
-  [networkhammer.sh](#networkhammersh) - scripts that measure the
+  [netperfrunner.sh](#netperfrunnersh) - scripts that measure the
   performance of your router or offer load to the network for testing.
 
 * [idlelatency.sh](#idlelatencysh) - a script to measure the latency of
@@ -343,12 +342,6 @@ than your line's rated speed.
 This is not a bug, nor is it a problem with your internet connection.
 That's because the acknowledge messages sent back to the sender consume
 a significant fraction of the link's capacity (as much as 25%).
-
-## [networkhammer.sh](https://github.com/richb-hanover/OpenWrtScripts/blob/master/networkhammer.sh)
-
-The `networkhammer.sh` script continually invokes the netperfrunner script to
-provide a heavy load.
-It runs forever - Ctl-C will interrupt it.
 
 ## [idlelatency.sh](https://github.com/richb-hanover/OpenWrtScripts/blob/master/idlelatency.sh)
 
