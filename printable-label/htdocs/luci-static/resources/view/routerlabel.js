@@ -232,7 +232,7 @@ return view.extend({
 		return E('div', { 'class': 'rl-page' }, [
 			E('style', {}, [ PRINT_CSS ]),
 			E('h2', {}, _('Printable label for your router')),
-			E('p', {}, _('Print this page to produce a paper label (below) that displays the router ' +
+			E('p', {}, _('Print this page to produce a paper label (below) that displays the Router ' +
 				'model, OpenWrt version, LAN address and the credentials necessary to access the ' +
 				'router. ' +
 				'Tape the label to the router so that years from now, the next person to touch ' +
@@ -243,7 +243,7 @@ return view.extend({
 				_(' Snip out the router\'s model from the Power Brick Label and tape it to the power brick so it ' +
 					'can be re-united with the router if they get separated.')
 			]),
-			E('h3', {}, _('Why is this safe?')),
+			E('h3', {}, _('Why is this trustworthy?')),
 			E('p', {}, _('This page only displays data retrieved from the router; ' +
 				'it never acts on it or sends it anywhere. If the bad guy can read this label, ' +
 				'they can also factory-reset the router (or steal your TV or your silverware).')),

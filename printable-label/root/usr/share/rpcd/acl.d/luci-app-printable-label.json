@@ -1,6 +1,6 @@
 {
-	"luci-app-router-label": {
-		"description": "Grant access for luci-app-router-label",
+	"luci-app-printable-label": {
+		"description": "Grant access for luci-app-printable-label",
 		"read": {
 			"file": {
 				"/proc/mtd": [ "read" ]

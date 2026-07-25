@@ -7,7 +7,7 @@
 			"path": "routerlabel"
 		},
 		"depends": {
-			"acl": [ "luci-app-router-label" ]
+			"acl": [ "luci-app-printable-label" ]
 		}
 	}
 }

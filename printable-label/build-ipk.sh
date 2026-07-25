@@ -1,24 +1,26 @@
 #! /bin/sh
 
-# Build luci-app-router-label_<version>-<release>_all.ipk for opkg (OpenWrt
+# Build luci-app-printable-label_<version>-<release>_all.ipk for opkg (OpenWrt
 # 23.05 and earlier -- 24.10+ uses apk instead, see build-apk.sh). An .ipk is
-# just an `ar` archive of debian-binary + control.tar.gz + data.tar.gz, the
-# old Debian package format -- no SDK/opkg-utils needed to produce one, and
+# a gzip-compressed tar of debian-binary + control.tar.gz + data.tar.gz --
+# NOT an `ar` archive (that's the .deb/dpkg format; opkg's own libopkg
+# unconditionally runs the outer file through `gzip -d` then reads it as a
+# tar, so an ar-format file just extracts to nothing and opkg reports
+# "Malformed package file"). No SDK/opkg-utils needed to produce one, and
 # (like the .apk) nothing here is cross-compiled since this package is pure
 # JS/JSON. See BUILDING.md.
 #
-# Runs `ar`/`tar` inside alpine:3.24 rather than on the host, purely to get
-# a known-good ar/tar (macOS's BSD ar/tar have enough format quirks -- AppleDouble
+# Runs `tar` inside alpine:3.24 rather than on the host, purely to get a
+# known-good tar (macOS's BSD tar has enough format quirks -- AppleDouble
 # resource-fork entries, differing owner/group flags -- to make hand-rolling
-# a binary archive format on the host a bad bet). binutils (for `ar`; alpine
-# has no ar otherwise) is installed into the container at run time.
+# a binary archive format on the host a bad bet).
 
 set -e   # stop on first failure instead of producing a half-built package
 
 # Run from anywhere -- always operate relative to this script's own directory.
 cd "$(dirname "$0")" || exit 1
 
-PKGNAME=luci-app-router-label
+PKGNAME=luci-app-printable-label
 APK_IMAGE=alpine:3.24
 OUTDIR="$HOME/openwrt-sdk-build/bin/packages/mips_24kc/base"
 JS_VIEW=htdocs/luci-static/resources/view/routerlabel.js
@@ -55,10 +57,10 @@ mkdir -p \
   "$WORKDIR/data/www/luci-static/resources/view" \
   "$WORKDIR/control"
 
-cp root/usr/share/luci/menu.d/luci-app-router-label.json \
-  "$WORKDIR/data/usr/share/luci/menu.d/luci-app-router-label.json"
-cp root/usr/share/rpcd/acl.d/luci-app-router-label.json \
-  "$WORKDIR/data/usr/share/rpcd/acl.d/luci-app-router-label.json"
+cp root/usr/share/luci/menu.d/luci-app-printable-label.json \
+  "$WORKDIR/data/usr/share/luci/menu.d/luci-app-printable-label.json"
+cp root/usr/share/rpcd/acl.d/luci-app-printable-label.json \
+  "$WORKDIR/data/usr/share/rpcd/acl.d/luci-app-printable-label.json"
 cp htdocs/luci-static/resources/routerlabel.js \
   "$WORKDIR/data/www/luci-static/resources/routerlabel.js"
 cp htdocs/luci-static/resources/view/routerlabel.js \
@@ -116,10 +118,9 @@ docker run --rm \
   -w /work \
   "$APK_IMAGE" sh -c '
     set -e
-    apk add --no-cache binutils >/dev/null
     tar -czf control.tar.gz -C control .
     tar -czf data.tar.gz -C data .
-    ar rc "/out/'"$IPK_NAME"'" debian-binary control.tar.gz data.tar.gz
+    tar -czf "/out/'"$IPK_NAME"'" debian-binary control.tar.gz data.tar.gz
   '
 
 echo "Built: $OUTDIR/$IPK_NAME"

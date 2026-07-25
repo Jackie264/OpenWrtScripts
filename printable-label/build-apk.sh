@@ -1,6 +1,6 @@
 #! /bin/sh
 
-# Build luci-app-router-label-<version>.apk directly with apk-tools' `mkpkg`,
+# Build luci-app-printable-label-<version>.apk directly with apk-tools' `mkpkg`,
 # skipping the OpenWrt SDK entirely. This package is just 4 JS/JSON files, so
 # there is nothing to cross-compile -- the SDK's own package-pack.mk ends up
 # calling `apk mkpkg` on those files anyway. See BUILDING.md for how this was
@@ -16,7 +16,7 @@ set -e   # stop on first failure instead of producing a half-built package
 # Run from anywhere -- always operate relative to this script's own directory.
 cd "$(dirname "$0")" || exit 1
 
-PKGNAME=luci-app-router-label
+PKGNAME=luci-app-printable-label
 APK_IMAGE=alpine:3.24
 OUTDIR="$HOME/openwrt-sdk-build/bin/packages/mips_24kc/base"
 JS_VIEW=htdocs/luci-static/resources/view/routerlabel.js
@@ -61,10 +61,10 @@ mkdir -p \
   "$WORKDIR/files/lib/apk/packages" \
   "$WORKDIR/scripts"
 
-cp root/usr/share/luci/menu.d/luci-app-router-label.json \
-  "$WORKDIR/files/usr/share/luci/menu.d/luci-app-router-label.json"
-cp root/usr/share/rpcd/acl.d/luci-app-router-label.json \
-  "$WORKDIR/files/usr/share/rpcd/acl.d/luci-app-router-label.json"
+cp root/usr/share/luci/menu.d/luci-app-printable-label.json \
+  "$WORKDIR/files/usr/share/luci/menu.d/luci-app-printable-label.json"
+cp root/usr/share/rpcd/acl.d/luci-app-printable-label.json \
+  "$WORKDIR/files/usr/share/rpcd/acl.d/luci-app-printable-label.json"
 cp htdocs/luci-static/resources/routerlabel.js \
   "$WORKDIR/files/www/luci-static/resources/routerlabel.js"
 cp htdocs/luci-static/resources/view/routerlabel.js \
@@ -73,8 +73,8 @@ cp htdocs/luci-static/resources/view/routerlabel.js \
 # apk expects a manifest of the files it's about to own, at this fixed path --
 # matches what luci.mk generates for every luci-app-* package.
 cat > "$WORKDIR/files/lib/apk/packages/${PKGNAME}.list" <<EOF
-/usr/share/luci/menu.d/luci-app-router-label.json
-/usr/share/rpcd/acl.d/luci-app-router-label.json
+/usr/share/luci/menu.d/luci-app-printable-label.json
+/usr/share/rpcd/acl.d/luci-app-printable-label.json
 /www/luci-static/resources/routerlabel.js
 /www/luci-static/resources/view/routerlabel.js
 EOF

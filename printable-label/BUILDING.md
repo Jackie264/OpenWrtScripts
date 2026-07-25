@@ -7,7 +7,7 @@ both in about a second, with no OpenWrt SDK, no feeds, and no toolchain.
 
 ## build-apk.sh (apk-tools, OpenWrt 24.10+)
 
-Builds a real, installable `luci-app-router-label-<version>.apk`. Verified
+Builds a real, installable `luci-app-printable-label-<version>.apk`. Verified
 against a real SDK-built `.apk`: identical file tree, install/upgrade/remove
 scripts, and metadata (see "How it works" below) -- and installed with `apk
 add` on a real router.
@@ -29,7 +29,7 @@ The `build-apk.sh` script copies that version number into
 `htdocs/luci-static/resources/view/routerlabel.js`.
 
 The `.apk` lands in
-`~/openwrt-sdk-build/bin/packages/mips_24kc/base/luci-app-router-label-<version>.apk`
+`~/openwrt-sdk-build/bin/packages/mips_24kc/base/luci-app-printable-label-<version>.apk`
 (same path the old SDK-based workflow used, kept only for continuity with
 the install steps below -- the `mips_24kc` subdirectory name isn't
 meaningful anymore since the package is `noarch`). Old-version `.apk` files
@@ -44,7 +44,7 @@ and restarting `rpcd`. The manual
 steps below are what it automates.
 
 ```bash
-APK=~/openwrt-sdk-build/bin/packages/mips_24kc/base/luci-app-router-label-<version>.apk
+APK=~/openwrt-sdk-build/bin/packages/mips_24kc/base/luci-app-printable-label-<version>.apk
 scp -O "$APK" root@<router>:/tmp/
 ssh root@<router> apk add --allow-untrusted /tmp/$(basename "$APK")
 ssh root@<router> rm -f /tmp/luci-indexcache*
@@ -63,27 +63,24 @@ ambiguity between package-managed and stray files:
 ssh root@<router> '
   rm -f /www/luci-static/resources/routerlabel.js
   rm -f /www/luci-static/resources/view/routerlabel.js
-  rm -f /usr/share/luci/menu.d/luci-app-router-label.json
-  rm -f /usr/share/rpcd/acl.d/luci-app-router-label.json
+  rm -f /usr/share/luci/menu.d/luci-app-printable-label.json
+  rm -f /usr/share/rpcd/acl.d/luci-app-printable-label.json
 '
 ```
 
 To upgrade to a newer build later: `apk add --allow-untrusted
-/tmp/luci-app-router-label-<new-version>.apk` again -- `apk` handles the
-upgrade in place. To remove entirely: `apk del luci-app-router-label`.
+/tmp/luci-app-printable-label-<new-version>.apk` again -- `apk` handles the
+upgrade in place. To remove entirely: `apk del luci-app-printable-label`.
 
 ## build-ipk.sh (opkg, OpenWrt 23.05 and earlier)
 
-Builds `luci-app-router-label_<version>-<release>_all.ipk`. Same source
+Builds `luci-app-printable-label_<version>-<release>_all.ipk`. Same source
 files as `build-apk.sh`, just packaged in the `.ipk` format opkg expects.
-Not yet verified with `opkg install` on a real router -- only checked by
-hand (correct `ar` member order, `control` fields, and data tree) --
-verify on real hardware before trusting it for anything but testing.
 
 ### Requirements (build-ipk.sh)
 
-Docker Desktop running, same as `build-apk.sh` -- `alpine:3.24` again, with
-`binutils` installed into the container at run time for a real `ar`.
+Docker Desktop running, same as `build-apk.sh` -- `alpine:3.24` again, for a
+known-good `tar`.
 
 ### Building the .ipk
 
@@ -95,7 +92,7 @@ Also syncs `APP_VERSION` in `routerlabel.js` to the Makefile's
 `PKG_VERSION`, same as `build-apk.sh` -- harmless to run both.
 
 The `.ipk` lands in the same directory as the `.apk`,
-`~/openwrt-sdk-build/bin/packages/mips_24kc/base/luci-app-router-label_<version>-<release>_all.ipk`.
+`~/openwrt-sdk-build/bin/packages/mips_24kc/base/luci-app-printable-label_<version>-<release>_all.ipk`.
 
 ### Installing the .ipk on a router
 
@@ -104,7 +101,7 @@ already-built `.ipk` and installs it with `opkg`, clearing the menu cache
 and restarting `rpcd`. The manual steps below are what it automates.
 
 ```bash
-IPK=~/openwrt-sdk-build/bin/packages/mips_24kc/base/luci-app-router-label_<version>-<release>_all.ipk
+IPK=~/openwrt-sdk-build/bin/packages/mips_24kc/base/luci-app-printable-label_<version>-<release>_all.ipk
 scp -O "$IPK" root@<router>:/tmp/
 ssh root@<router> opkg install /tmp/$(basename "$IPK")
 ssh root@<router> rm -f /tmp/luci-indexcache*
@@ -115,7 +112,7 @@ Unlike `apk add`, plain `opkg install` also handles upgrades in place (no
 separate upgrade flag needed) and doesn't require an `--allow-untrusted`
 equivalent for a locally-built, unsigned package -- opkg just isn't
 signature-verifying by default the way apk is. To remove: `opkg remove
-luci-app-router-label`.
+luci-app-printable-label`.
 
 If the router already has the loose-file version deployed, remove those
 first -- same four files, same commands as in the `build-apk.sh` section
@@ -136,7 +133,7 @@ same thing directly:
 
 - Assembles the 4 files this package actually installs (2 `.js`, 2 `.json`)
   into the exact target file tree.
-- Generates `lib/apk/packages/luci-app-router-label.list`, a manifest apk
+- Generates `lib/apk/packages/luci-app-printable-label.list`, a manifest apk
   expects at that fixed path (this is what `luci.mk` generates for every
   `luci-app-*` package).
 - Generates the standard `post-install`/`pre-deinstall`/`post-upgrade`
@@ -155,12 +152,22 @@ support packages that do compile something.
 
 ### .ipk
 
-An `.ipk` is much simpler than an `.apk`: it's just an `ar` archive of three
-members, in order -- `debian-binary` (literally the text `2.0`),
+An `.ipk` is much simpler than an `.apk`: it's a gzip-compressed tar of
+three members, in order -- `debian-binary` (literally the text `2.0`),
 `control.tar.gz` (a `control` metadata file plus `postinst`/`prerm`
-scripts), and `data.tar.gz` (the file tree to install). This is the old
-Debian package format, from before `.deb` moved to `tar.xz` members --
-opkg never changed formats since adopting it.
+scripts), and `data.tar.gz` (the file tree to install). This looks like the
+old Debian `ar`-archive package format at a glance (`file(1)` even reports
+it as "Debian binary package"), but it isn't one -- OpenWrt's opkg
+(`libopkg/pkg_extract.c`'s `deb_extract`) unconditionally pipes the whole
+file through `gzip -d` before reading it as a tar stream, so it only works
+if the outer container really is `tar.gz`. An `ar`-format outer container
+(the actual dpkg/.deb format, and what `opkg-build`'s undocumented default
+still produces) fails `gzip -d` silently, extracts to nothing, and opkg
+reports `pkg_init_from_file: Malformed package file` -- confirmed by
+tracing the failure through opkg's actual source (`libopkg/pkg.c` ->
+`pkg_parse.c` -> `pkg_extract.c` -> `libbb/unarchive.c`/`gzip.c`) after a
+build using `ar rc` for the outer container failed exactly that way on
+real hardware.
 
 `build-ipk.sh` assembles the same file tree and `Makefile`-derived metadata
 as `build-apk.sh`, but instead of one purpose-built `postinst` +
@@ -169,8 +176,7 @@ and upgrades (exporting `PKG_UPGRADE=1` itself in the upgrade case) --
 so there's one script instead of two, otherwise identical
 `add_group_and_user`/`default_postinst`/`default_prerm` logic.
 
-`ar` and `tar` run inside `alpine:3.24` rather than on the host: macOS's
-BSD `ar`/`tar` have enough format quirks (AppleDouble resource-fork
-entries, differing owner/group flags) to make it worth avoiding entirely
-for a binary archive format, even one this simple. Alpine has no `ar` by
-default, so `binutils` is installed into the container at run time.
+`tar` runs inside `alpine:3.24` rather than on the host: macOS's BSD `tar`
+has enough format quirks (AppleDouble resource-fork entries, differing
+owner/group flags) to make it worth avoiding entirely for a binary archive
+format, even one this simple.

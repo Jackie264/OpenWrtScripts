@@ -13,10 +13,10 @@ if [ -z "$1" ]; then
 fi
 
 # Run from anywhere -- always operate relative to this script's own directory,
-# since the Makefile/ipk paths below are relative to luci-app-router-label/.
+# since the Makefile/ipk paths below are relative to printable-label/.
 cd "$(dirname "$0")" || exit 1
 
-PKGNAME=luci-app-router-label
+PKGNAME=luci-app-printable-label
 ROUTER="$1"
 
 PKG_VERSION=$(sed -n 's/^PKG_VERSION:=//p' Makefile)
@@ -34,8 +34,8 @@ fi
 ssh "$ROUTER" '
 	rm -f /www/luci-static/resources/routerlabel.js
 	rm -f /www/luci-static/resources/view/routerlabel.js
-	rm -f /usr/share/luci/menu.d/luci-app-router-label.json
-	rm -f /usr/share/rpcd/acl.d/luci-app-router-label.json
+	rm -f /usr/share/luci/menu.d/luci-app-printable-label.json
+	rm -f /usr/share/rpcd/acl.d/luci-app-printable-label.json
 '
 
 scp -O "$IPK" "$ROUTER:/tmp/"

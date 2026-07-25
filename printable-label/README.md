@@ -56,7 +56,7 @@ Useful for iterating on a single file, or if something's gone wrong with
 the packaged path above — no package involved, just `scp` the file straight
 to where it runs. Copy the files directly onto a router running current
 OpenWrt. The `scp`
-source paths below are relative to this directory (`luci-app-router-label/`),
+source paths below are relative to this directory (`printable-label/`),
 so `cd` here first.
 
 **Note the `-O` flag on each `scp`:** OpenWrt's default SSH server (Dropbear)
@@ -66,7 +66,7 @@ which is what current macOS ships) default to the SFTP protocol. Without
 closed`. `-O` forces the older SCP protocol, which Dropbear does support.
 
 ```bash
-cd luci-app-router-label   # skip if you're already in this directory
+cd printable-label   # skip if you're already in this directory
 
 ssh root@<router> mkdir -p /usr/share/luci/menu.d /usr/share/rpcd/acl.d \
 	/www/luci-static/resources/view
@@ -75,10 +75,10 @@ scp -O htdocs/luci-static/resources/routerlabel.js \
 	root@<router>:/www/luci-static/resources/routerlabel.js
 scp -O htdocs/luci-static/resources/view/routerlabel.js \
 	root@<router>:/www/luci-static/resources/view/routerlabel.js
-scp -O root/usr/share/luci/menu.d/luci-app-router-label.json \
-	root@<router>:/usr/share/luci/menu.d/luci-app-router-label.json
-scp -O root/usr/share/rpcd/acl.d/luci-app-router-label.json \
-	root@<router>:/usr/share/rpcd/acl.d/luci-app-router-label.json
+scp -O root/usr/share/luci/menu.d/luci-app-printable-label.json \
+	root@<router>:/usr/share/luci/menu.d/luci-app-printable-label.json
+scp -O root/usr/share/rpcd/acl.d/luci-app-printable-label.json \
+	root@<router>:/usr/share/rpcd/acl.d/luci-app-printable-label.json
 
 # Menu cache and rpcd (for the ACL file) both need a kick to pick up new files
 ssh root@<router> rm -f /tmp/luci-indexcache*

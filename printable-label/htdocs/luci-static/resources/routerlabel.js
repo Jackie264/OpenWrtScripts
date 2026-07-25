@@ -1,7 +1,7 @@
 'use strict';
 'require baseclass';
 
-// Pure data-parsing/formatting logic for luci-app-router-label, ported from
+// Pure data-parsing/formatting logic for Printable Label, ported from
 // print-router-label.sh. Loaded by the LuCI JS view via 'require routerlabel'.
 //
 // This must be a genuine baseclass.extend() result -- LuCI's require()
