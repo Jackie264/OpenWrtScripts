@@ -12,7 +12,7 @@ These scripts work for [OpenWrt](https://openwrt.org) and include:
   it easy to access in the future.
   This supercedes the `print-router-label.sh` script (below).
   Because it's currently an .apk (not a .opkg),
-  requires OpenWrt 25.12 or newer.
+  requires OpenWrt 24.10 or newer.
 
 * [getstats.sh](#getstatssh) - a script to collect troubleshooting
   information that helps to diagnose problems in the OpenWrt distribution.
