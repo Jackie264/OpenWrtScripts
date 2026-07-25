@@ -11,7 +11,7 @@
 // `build-apk.sh --sync-version`) -- can't be derived at runtime since this
 // file is also used directly (as loose files, no SDK build) during
 // day-to-day development.
-var APP_VERSION = '0.1.2';
+var APP_VERSION = '0.1.3';
 
 var callSystemBoard = rpc.declare({
 	object: 'system',

@@ -5,14 +5,15 @@ configure and measure (and improve) latency in home routers.
 These scripts work for [OpenWrt](https://openwrt.org) and include:
 
 * [Printable Label](./luci-app-router-label/README.md) -
-  a prototype of an OpenWrt package that prints a label
+  an OpenWrt package
+  (System -> Printable Label) that prints a label
   that can be taped to the router,
-  with all the model number and credentials to make
+  with the model number and credentials to make
   it easy to access in the future.
-  This is a transcription of the `print-router-label.sh` (below)
-  from bash to Javascript (for the package).
-  Requires OpenWrt 25.12 or newer
-    
+  This supercedes the `print-router-label.sh` script (below).
+  Because it's currently an .apk (not a .opkg),
+  requires OpenWrt 25.12 or newer.
+
 * [getstats.sh](#getstatssh) - a script to collect troubleshooting
   information that helps to diagnose problems in the OpenWrt distribution.
 
@@ -29,11 +30,7 @@ These scripts work for [OpenWrt](https://openwrt.org) and include:
 * [print-router-label.sh](#print-router-labelsh) -
   Create a printable label showing LAN address and login credentials
   that can be taped on the side of the router.
-
-* [luci-app-router-label](#luci-app-router-label) -
-  A LuCI web GUI page (Services > Printable Label) showing the same
-  information as print-router-label.sh, with a fill-in-only field
-  for the root password.
+  This script works on any OpenWrt router.
 
 * [betterspeedtest.sh](#betterspeedtestsh) &
   [netperfrunner.sh](#netperfrunnersh) - scripts that measure the
@@ -130,6 +127,8 @@ This script retrieves values from an OpenWrt router to create a
 label that contains the LAN address and important credentials.
 Tape this label to the side of the router so the next person
 to encounter the router (which may be you) can access it.
+This script works on any router.
+See the Printable Label - a package that prints a nicer label.
 
 This label is reasonably secure - if the bad guy
 can read the label, they can also factory-reset the router
@@ -152,19 +151,6 @@ can read the label, they can also factory-reset the router
 
 Label for Power Brick: Linksys E8450 (UBI)
 ```
-
-## [luci-app-router-label](https://github.com/richb-hanover/OpenWrtScripts/tree/master/luci-app-router-label)
-
-Shows the same information as `print-router-label.sh` (device, Flash/RAM,
-OpenWrt version, LAN address, Wifi credentials) in the LuCI web GUI,
-under **Services > Printable Label**, instead of on the console. The root
-login password isn't derivable from `uci`, so it's a plain text field on
-the page that only updates the page's display — nothing is saved or
-sent anywhere.
-
-Currently ships as loose files rather than an installable package; see
-[luci-app-router-label/README.md](./luci-app-router-label/README.md) for
-how to try it on a router.
 
 ## [config-openwrt.sh](https://github.com/richb-hanover/OpenWrtScripts/blob/master/config-openwrt.sh)
 

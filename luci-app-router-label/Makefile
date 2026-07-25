@@ -3,7 +3,7 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_VERSION:=0.1.2
+PKG_VERSION:=0.1.3
 PKG_RELEASE:=1
 
 LUCI_TITLE:=Printable Label page for OpenWrt routers
