@@ -1,24 +1,57 @@
 # Building the package (.apk / .ipk)
 
-OpenWrt switched its default package manager from `opkg` to `apk-tools`
-starting with the 24.10 release line. 23.05 and earlier (still most routers
-in the wild) use `opkg`/`.ipk`. Two scripts build the right format for each,
-both in about a second, with no OpenWrt SDK, no feeds, and no toolchain.
+The script `build-packages.sh` builds both the .apk and .ipk.
+Use this script after making changes to any of the files.
 
-## build-apk.sh (apk-tools, OpenWrt 24.10+)
+The script spins up a small
+Docker container to use the built-in build tools
+to produce the package files.
+It retrieves  `PKG_VERSION` and `PKG_RELEASE` from
+the _Makefile_ for versioning.
+
+The built packages are saved in:
+
+- apk: $HOME/openwrt-sdk-build/bin/packages/mips_24kc/base/${PKGNAME}-${PKG_VERSION}-r${PKG_RELEASE}.apk
+
+- ipk: $HOME/openwrt-sdk-build/bin/packages/mips_24kc/base/${PKGNAME}_${PKG_VERSION}-${PKG_RELEASE}_all.ipk
+
+## Deploying for testing
+
+The scripts `deploy-ipk.sh` and `deploy-apk.sh`
+take a parameter of **root@\<router address>**
+and ssh into the device, copy the package to the router,
+and then install it.
+You'll need to reconnect to the LuCI GUI to seen the update.
+
+## Pushing to Github
+
+There are three steps to publishing the scripts and packages:
+
+1. Commit all the changes, and push to Github normally.
+2. Use `build-packages.sh` then...
+3. Run `release-to-github.sh` to create an updated
+   release on the home page of the Github repo
+
+## Background - old information from development
+
+The remainder of this page may be outdated because
+it was created during the development process.
+I'm retaining it here so nothing important gets lost.
+
+### build-apk.sh (apk-tools, OpenWrt 24.10+)
 
 Builds a real, installable `luci-app-printable-label-<version>.apk`. Verified
 against a real SDK-built `.apk`: identical file tree, install/upgrade/remove
 scripts, and metadata (see "How it works" below) -- and installed with `apk
 add` on a real router.
 
-### Requirements
+#### Requirements
 
 Docker Desktop running. The script uses a tiny `alpine:3.24` image (~7MB,
 pulled automatically on first use) to invoke the real `apk mkpkg`
 command -- there's no persistent container or volume to set up.
 
-### Building
+#### Building
 
 ```bash
 ./build-apk.sh
@@ -37,7 +70,7 @@ meaningful anymore since the package is `noarch`). Old-version `.apk` files
 aren't auto-removed -- delete stale ones so you don't accidentally install
 the wrong version.
 
-### Installing on a router
+#### Installing on a router
 
 **Quick path:** `./deploy-apk.sh [user@]router-address` — scp's the
 already-built `.apk` and installs it with `apk`, clearing the menu cache
@@ -73,17 +106,17 @@ To upgrade to a newer build later: `apk add --allow-untrusted
 /tmp/luci-app-printable-label-<new-version>.apk` again -- `apk` handles the
 upgrade in place. To remove entirely: `apk del luci-app-printable-label`.
 
-## build-ipk.sh (opkg, OpenWrt 23.05 and earlier)
+### build-ipk.sh (opkg, OpenWrt 23.05 and earlier)
 
 Builds `luci-app-printable-label_<version>-<release>_all.ipk`. Same source
 files as `build-apk.sh`, just packaged in the `.ipk` format opkg expects.
 
-### Requirements (build-ipk.sh)
+#### Requirements (build-ipk.sh)
 
 Docker Desktop running, same as `build-apk.sh` -- `alpine:3.24` again, for a
 known-good `tar`.
 
-### Building the .ipk
+#### Building the .ipk
 
 ```bash
 ./build-ipk.sh
@@ -95,7 +128,7 @@ Also syncs `APP_VERSION` in `routerlabel.js` to the Makefile's
 The `.ipk` lands in the same directory as the `.apk`,
 `~/openwrt-sdk-build/bin/packages/mips_24kc/base/luci-app-printable-label_<version>-<release>_all.ipk`.
 
-### Installing the .ipk on a router
+#### Installing the .ipk on a router
 
 **Quick path:** `./deploy-ipk.sh [user@]router-address` — scp's the
 already-built `.ipk` and installs it with `opkg`, clearing the menu cache
@@ -119,9 +152,9 @@ If the router already has the loose-file version deployed, remove those
 first -- same four files, same commands as in the `build-apk.sh` section
 above.
 
-## How it works
+### How it works
 
-### .apk
+#### .apk
 
 OpenWrt's current package manager is `apk-tools` v3, and its `.apk` files
 are a custom binary format ("ADB", Alpine Dependency Binary) -- not a
@@ -151,7 +184,7 @@ Since there's no compiled code and no cross-compilation, none of the SDK's
 toolchain, feeds, or `.config` machinery is actually needed -- it exists to
 support packages that do compile something.
 
-### .ipk
+#### .ipk
 
 An `.ipk` is much simpler than an `.apk`: it's a gzip-compressed tar of
 three members, in order -- `debian-binary` (literally the text `2.0`),
@@ -181,3 +214,51 @@ so there's one script instead of two, otherwise identical
 has enough format quirks (AppleDouble resource-fork entries, differing
 owner/group flags) to make it worth avoiding entirely for a binary archive
 format, even one this simple.
+
+### Architecture note: targets ucode-era LuCI, not classic Lua LuCI
+
+Current OpenWrt (confirmed on a 2026-dated snapshot build, OpenWrt 25.12.5)
+has fully migrated LuCI's controller layer from Lua to ucode, and dropped
+`/usr/lib/lua/luci` entirely. Third-party apps in this LuCI version don't
+ship their own controller code at all — menu entries are plain JSON files
+in `/usr/share/luci/menu.d/`, and JS views fetch data directly via LuCI's
+existing client-side `fs`, `uci`, and `rpc` JS modules (the same modules
+`luci-app-sqm`'s `sqm.js` uses), gated by an ACL file in
+`/usr/share/rpcd/acl.d/`. There is no controller in this app for that
+reason — all the logic that used to live in a Lua controller now lives in
+`htdocs/luci-static/resources/routerlabel.js`, loaded by the view via
+`'require routerlabel'`.
+
+An earlier version of this app used a Lua controller + `luasrc/` module;
+that approach doesn't work on current OpenWrt and was removed.
+
+### Testing on a router
+
+**Recommended:** `./build-apk.sh && ./deploy-apk.sh [user@]router-address`
+from this directory — builds the `.apk` (see [BUILDING.md](./BUILDING.md))
+and installs it on the router with `apk`, clearing the menu cache and
+restarting `rpcd` for you.
+
+### Mock data for local development
+
+Once the page is deployed and loading, append `?mock=1` to its URL (e.g.
+`.../admin/services/routerlabel?mock=1`) to see fixed sample values instead
+of real ubus/uci/`/proc/mtd` data. Useful for iterating on layout/styling
+without needing to reconfigure wifi or uci each time. No redeploy needed
+to toggle it -- just edit the URL. The mock values live in `getMockData()`
+in `htdocs/luci-static/resources/view/routerlabel.js`.
+
+This can't eliminate the need for a router entirely: the page still runs
+inside LuCI's own JS framework (`E()`, `_()`, `view.extend`, etc.), which
+only exists once a real router has loaded it — there's no standalone/local
+way to preview this page outside LuCI.
+
+### Running the unit tests locally
+
+`htdocs/luci-static/resources/routerlabel.js` has no LuCI/browser
+dependencies and can be tested with plain `node` — no router needed:
+
+```bash
+cd ../tests
+node test_routerlabel_util.js
+```

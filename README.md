@@ -10,9 +10,7 @@ These scripts work for [OpenWrt](https://openwrt.org) and include:
   that can be taped to the router,
   with the model number and credentials to make
   it easy to access in the future.
-  This supercedes the `print-router-label.sh` script (below).
-  Because it's currently an .apk (not a .opkg),
-  requires OpenWrt 24.10 or newer.
+  This prints a more attractive label than the `print-router-label.sh` script (below).
 
 * [getstats.sh](#getstatssh) - a script to collect troubleshooting
   information that helps to diagnose problems in the OpenWrt distribution.
@@ -129,7 +127,8 @@ label that contains the LAN address and important credentials.
 Tape this label to the side of the router so the next person
 to encounter the router (which may be you) can access it.
 This script works on any router.
-See the Printable Label - a package that prints a nicer label.
+NB: the [Printable Label](./printable-label/README.md) package (above)
+prints a nicer label.
 
 This label is reasonably secure - if the bad guy
 can read the label, they can also factory-reset the router
