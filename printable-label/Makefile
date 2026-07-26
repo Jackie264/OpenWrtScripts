@@ -3,11 +3,11 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_VERSION:=0.1.3
-PKG_RELEASE:=1
+PKG_VERSION:=0.2.0
+PKG_RELEASE:=3
 
 LUCI_TITLE:=Printable Label page for OpenWrt routers
-LUCI_DESCRIPTION:=Displays the same router-identification label as print-router-label.sh, printable from the LuCI web GUI
+LUCI_DESCRIPTION:=Displays the Router model, LAN address, and credentials to make it easy to reconnect, even after years have gone by
 LUCI_DEPENDS:=+luci-base
 LUCI_PKGARCH:=all
 

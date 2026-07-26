@@ -1,4 +1,4 @@
-# Why a "Spare Router" Configuration?
+# Why make a "Spare Router"?
 
 Many people who use OpenWrt deploy a new router and
 retire an old (now unused) router.
@@ -34,14 +34,18 @@ It is available at
 * Connect the router's WAN Ethernet to the Internet
   (perhaps the LAN port of the new router).
 * Use the LuCI GUI to reset settings to
-  factory default (**System -> Backup/Flash firmware**)
+  factory default (**System -> Backup/Flash firmware**).
+  You will need to reconnect at 192.168.1.1
 * Use the [Firmware Selector](https://firmware-selector.openwrt.org/)
   to find and flash the latest firmware
 * SSH into the router using the Ethernet connection - `ssh root@192.168.1.1` -
   no password required, but you may need to update the fingerprint
-* Run the [config-spare-router.sh](https://github.com/richb-hanover/OpenWrtScripts/blob/main/config-spare-router.sh) script. See the instructions within the script for pasting it into _/tmp/config.sh_ and running it.
+* Run the
+[config-spare-router.sh](https://github.com/richb-hanover/OpenWrtScripts/blob/main/config-spare-router.sh) script.
+  See the instructions within the script for pasting it into
+  _/tmp/config.sh_ and running it.
 * When it completes, the script prints a label: cut it out and tape it to the router
-* _Pro tip:_ Printing the label in 12-point type produces a 
+* _Pro tip:_ Printing the label in 12-point type produces a
   "business card" size label.
 * _Pro tip:_ Snip text from the "Label for Power Brick" line of the printed paper
   and tape it directly to the power brick.
@@ -53,7 +57,8 @@ When the script completes, it displays the configuration similar to this,
 suitable for printing and taping to the router.
 
 _**NB:** This label is reasonably secure. If the bad guy can read the label,
-they can also push buttons to factory-reset it (or steal your silverware or your TV)._
+they can also push buttons to factory-reset it
+(or steal your silverware or your TV)._
 
 ```text
 # ======= Printed with: print-router-label.sh =======
@@ -82,7 +87,8 @@ Remember to change the following:
 * Root password (**System -> Administration**)
 * Wifi credentials (**Network -> Wireless**)
 * Enable other Wifi radios (**Network -> Wireless**)
-* Change the LAN interface IP address and other settings as needed (**Network -> Interfaces**)
+* Change the LAN interface IP address and other settings as needed
+  (**Network -> Interfaces**)
 * (Optional) Configure SQM (**Network -> SQM QoS**)
 * (Optional) Change the hostname (**System -> System**)
 * (Optional) Install other packages as needed

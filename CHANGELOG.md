@@ -1,18 +1,18 @@
 # CHANGELOG
 
-## 2026-07-20
+## 2026-07-26
 
-- First cut at a **Printable Label** .apk.
-  Appears in Services -> Printable Label.
-  Displays a web page that, when printed,
-  creates a label that can be taped to the router
+- **Printable Label** package that
+  appears in Services -> Printable Label.
+  Print the page to create a label that can be taped to the router
   with the model, OpenWrt version, and credentials
   to make it easy to connect to the router.
   
 ## 2024-10-02
 
 - Add "-Z" to the netperf test at netperf.bufferbloat.net
-- Update the https://netperf.bufferbloat.net page
+- Update the
+  [https://netperf.bufferbloat.net](https://netperf.bufferbloat.net) page
   to display each day's -Z passphrase
 
 ## 2024-09-24
@@ -30,7 +30,7 @@
 - Update `betterspeedtest.sh` to have better behavior
   if there are errors.
   
-## Many intervening releases ...
+## [Many intervening releases]
 
 ## 2015-04-11
 

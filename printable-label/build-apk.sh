@@ -90,7 +90,7 @@ cat > "$WORKDIR/scripts/postinst.sh" <<EOF
 export root="\${IPKG_INSTROOT}"
 export pkgname="${PKGNAME}"
 add_group_and_user
-default_postinst
+default_postinst "\$0"
 [ -n "\${IPKG_INSTROOT}" ] || { rm -f /tmp/luci-indexcache.*
 	rm -rf /tmp/luci-modulecache/
 	/etc/init.d/rpcd reload 2>/dev/null
@@ -104,7 +104,7 @@ cat > "$WORKDIR/scripts/prerm.sh" <<EOF
 . \${IPKG_INSTROOT}/lib/functions.sh
 export root="\${IPKG_INSTROOT}"
 export pkgname="${PKGNAME}"
-default_prerm
+default_prerm "\$0"
 EOF
 
 cat > "$WORKDIR/scripts/postupgrade.sh" <<EOF
@@ -116,7 +116,7 @@ export PKG_UPGRADE=1
 export root="\${IPKG_INSTROOT}"
 export pkgname="${PKGNAME}"
 add_group_and_user
-default_postinst
+default_postinst "\$0"
 [ -n "\${IPKG_INSTROOT}" ] || { rm -f /tmp/luci-indexcache.*
 	rm -rf /tmp/luci-modulecache/
 	/etc/init.d/rpcd reload 2>/dev/null

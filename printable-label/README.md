@@ -69,16 +69,16 @@ closed`. `-O` forces the older SCP protocol, which Dropbear does support.
 cd printable-label   # skip if you're already in this directory
 
 ssh root@<router> mkdir -p /usr/share/luci/menu.d /usr/share/rpcd/acl.d \
-	/www/luci-static/resources/view
+  /www/luci-static/resources/view
 
 scp -O htdocs/luci-static/resources/routerlabel.js \
-	root@<router>:/www/luci-static/resources/routerlabel.js
+  root@<router>:/www/luci-static/resources/routerlabel.js
 scp -O htdocs/luci-static/resources/view/routerlabel.js \
-	root@<router>:/www/luci-static/resources/view/routerlabel.js
+  root@<router>:/www/luci-static/resources/view/routerlabel.js
 scp -O root/usr/share/luci/menu.d/luci-app-printable-label.json \
-	root@<router>:/usr/share/luci/menu.d/luci-app-printable-label.json
+  root@<router>:/usr/share/luci/menu.d/luci-app-printable-label.json
 scp -O root/usr/share/rpcd/acl.d/luci-app-printable-label.json \
-	root@<router>:/usr/share/rpcd/acl.d/luci-app-printable-label.json
+  root@<router>:/usr/share/rpcd/acl.d/luci-app-printable-label.json
 
 # Menu cache and rpcd (for the ACL file) both need a kick to pick up new files
 ssh root@<router> rm -f /tmp/luci-indexcache*

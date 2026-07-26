@@ -24,7 +24,8 @@ command -- there's no persistent container or volume to set up.
 ./build-apk.sh
 ```
 
-**Note:** The packages version is saved in `PKG_VERSION` in the `Makefile`. Bump that version when you make changes.
+**Note:** The packages version is saved in `PKG_VERSION`
+in the `Makefile`. Bump that version when you make changes.
 The `build-apk.sh` script copies that version number into
 `htdocs/luci-static/resources/view/routerlabel.js`.
 

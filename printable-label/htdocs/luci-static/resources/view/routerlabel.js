@@ -11,7 +11,7 @@
 // `build-apk.sh --sync-version`) -- can't be derived at runtime since this
 // file is also used directly (as loose files, no SDK build) during
 // day-to-day development.
-var APP_VERSION = '0.1.3';
+var APP_VERSION = '0.2.0';
 
 var callSystemBoard = rpc.declare({
 	object: 'system',
@@ -232,7 +232,7 @@ return view.extend({
 		return E('div', { 'class': 'rl-page' }, [
 			E('style', {}, [ PRINT_CSS ]),
 			E('h2', {}, _('Printable label for your router')),
-			E('p', {}, _('Print this page to produce a paper label (below) that displays the Router ' +
+			E('p', {}, _('Print this page to produce a paper label (like the one below) that displays the Router ' +
 				'model, OpenWrt version, LAN address and the credentials necessary to access the ' +
 				'router. ' +
 				'Tape the label to the router so that years from now, the next person to touch ' +

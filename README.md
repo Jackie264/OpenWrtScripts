@@ -4,7 +4,7 @@ This is a set of scripts (sometimes also called "Openscripts") that report,
 configure and measure (and improve) latency in home routers.
 These scripts work for [OpenWrt](https://openwrt.org) and include:
 
-* [Printable Label](./luci-app-router-label/README.md) -
+* [Printable Label](./printable-label/README.md) -
   an OpenWrt package
   (System -> Printable Label) that prints a label
   that can be taped to the router,
@@ -116,10 +116,11 @@ so the next person "to touch it" can log in easily.
 
 When you're taking a router out of service,
 install the latest OpenWrt firmware, then run this script.
-Print the label (below) and tape it to the router.
-It'll be easy to start using it again.
+Print the label that it creates and tape it to the router.
+It'll be easy to bring it back into service
+because it has a known configuration.
 For more details, read
-[Why a "spare router"?](./Why%20a%20Spare%20Router%3F.md)
+[Why you should make a "spare router"](./Why%20You%20Should%20Make%20A%20Spare%20Router.md)
 
 ## [print-router-label.sh](https://github.com/richb-hanover/OpenWrtScripts/blob/master/print-router-label.sh)
 
@@ -227,7 +228,8 @@ But `betterspeedtest.sh` still provides good numerical results. See:
 * [Cloudflare Speed Test](https://speed.cloudflare.com/)
 * [Waveform Speed Test](https://www.waveform.com/tools/bufferbloat)
 
-The betterspeedtest.sh script measures latency during file transfers. To invoke it:
+The betterspeedtest.sh script measures latency during file transfers.
+To invoke it:
 
 ```bash
 sh betterspeedtest.sh -Z passphrase [ -4 | -6 ] [ -H netperf-server ] [ -t duration ] [ -p host-to-ping ] [ -i ] [ -n simultaneous-streams ]
@@ -239,7 +241,8 @@ Options, if present, are:
   Alternate servers are netperf-east (east coast US), netperf-west (California),
   and netperf-eu (Denmark)
 * -4 | -6:     Enable ipv4 or ipv6 testing (default - ipv4)
-* -t | --time: Duration for how long each direction's test should run - (default - 60 seconds)
+* -t | --time: Duration for how long each direction's test should run -
+  (default - 60 seconds)
 * -p | --ping: Host to ping to measure latency (default - gstatic.com)
 * -i | --idle: Don't send traffic, only measure idle latency
 * -n | --number: Number of simultaneous sessions (default - 5 sessions)
@@ -375,7 +378,7 @@ There are several steps:
    There are detailed instructions for setting up an account and an IPv6 tunnel
    in the script itself, or at the
    [IPv6 Tunnel page](http://www.bufferbloat.net/projects/cerowrt/wiki/IPv6_Tunnel)
-   of [bufferbloat.net](bufferbloat.net)
+   of [bufferbloat.net](https://bufferbloat.net)
 2. From the tunnelbroker main page, click "Create Regular Tunnel"
 
    * Enter your IP address in "IPv4 Endpoint"
